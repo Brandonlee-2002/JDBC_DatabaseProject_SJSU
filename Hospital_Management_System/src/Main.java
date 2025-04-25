@@ -1,4 +1,6 @@
 import DataAccessObjects.PatientDAO;
+import UI.MainMenu;
+import UI.PatientForm;
 import models.Patient;
 
 import java.time.LocalDate;
@@ -37,5 +39,12 @@ public class Main {
         // 5. Delete the patient
         patientDAO.deletePatient(updated.getPatientID());
         System.out.println("\nDeleted test patient with ID: " + updated.getPatientID());
+        
+        new MainMenu().setVisible(true);
+        
+        /*javax.swing.SwingUtilities.invokeLater(() -> {
+            new PatientForm().setVisible(true);
+        });
+        */
     }
 }
