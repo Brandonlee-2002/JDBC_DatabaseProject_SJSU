@@ -15,6 +15,7 @@ public class DoctorDashboard extends JFrame {
     private DefaultTableModel tableModel;
     private PatientDAO patientDAO = new PatientDAO();
 
+
     public DoctorDashboard() {
         setTitle("Doctor Dashboard - Patient List");
         setSize(700, 400);
