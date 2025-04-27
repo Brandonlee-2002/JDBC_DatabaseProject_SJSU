@@ -18,6 +18,8 @@ Instructions to setup the project:
         - JDBC connector between Java and SQL  
 <br>
 
-2. Create the MySQL Database (use the create_schema.sql file for database setup) <br>
+2. Create the MySQL Database (use the create_schema.sql file for database setup) 
 
-3.  
+3. Use initialize_data.sql to input all the data (all dummy data, no real person's info)
+
+4. 
