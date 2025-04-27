@@ -1,30 +1,34 @@
 package DataAccessObjects;
 
 import models.Patient;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PatientDAO {
 
-    // Add a new patient
-    public void addPatient(Patient patient) {
-        String sql = "INSERT INTO Patients (Name, DOB, Gender, ContactInfo) VALUES (?, ?, ?, ?)";
+	// Add a new patient
+	public void addPatient(Patient patient) {
+	    String sql = "INSERT INTO Patients (Name, DOB, Gender, ContactInfo, Username, Password) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, patient.getName());
-            stmt.setDate(2, java.sql.Date.valueOf(patient.getDob()));
-            stmt.setString(3, patient.getGender());
-            stmt.setString(4, patient.getContactInfo());
+	        stmt.setString(1, patient.getName());
+	        stmt.setDate(2, java.sql.Date.valueOf(patient.getDob()));
+	        stmt.setString(3, patient.getGender());
+	        stmt.setString(4, patient.getContactInfo());
+	        stmt.setString(5, patient.getUsername());  // 👈 username field
+	        stmt.setString(6, patient.getPassword());  // 👈 password field
 
-            stmt.executeUpdate();
-            System.out.println("Patient added successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+	        stmt.executeUpdate();
+	        System.out.println("Patient added successfully.");
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 
     // Get all patients
     public List<Patient> getAllPatients() {
@@ -41,7 +45,9 @@ public class PatientDAO {
                     rs.getString("Name"),
                     rs.getDate("DOB").toLocalDate(),
                     rs.getString("Gender"),
-                    rs.getString("ContactInfo")
+                    rs.getString("ContactInfo"),
+                    rs.getString("Password"),
+                    rs.getString("Username")
                 );
                 patients.add(p);
             }
@@ -52,15 +58,16 @@ public class PatientDAO {
         return patients;
     }
 
-    // Get patient by ID
-    public Patient getPatientById(int id) {
-        String sql = "SELECT * FROM Patients WHERE PatientID = ?";
+    // Login patient by ID and Password
+    public Patient loginPatient(String username, String password) {
+        String sql = "SELECT * FROM Patients WHERE Username = ? AND Password = ?";
         Patient patient = null;
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, id);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -69,7 +76,9 @@ public class PatientDAO {
                     rs.getString("Name"),
                     rs.getDate("DOB").toLocalDate(),
                     rs.getString("Gender"),
-                    rs.getString("ContactInfo")
+                    rs.getString("ContactInfo"),
+                    rs.getString("Username"),
+                    rs.getString("Password")
                 );
             }
             rs.close();
@@ -80,9 +89,9 @@ public class PatientDAO {
         return patient;
     }
 
-    // Update patient
+    // Update patient (mainly for updating contact info or password)
     public void updatePatient(Patient patient) {
-        String sql = "UPDATE Patients SET Name = ?, DOB = ?, Gender = ?, ContactInfo = ? WHERE PatientID = ?";
+        String sql = "UPDATE Patients SET Name = ?, DOB = ?, Gender = ?, ContactInfo = ?, Password = ? WHERE PatientID = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -91,7 +100,8 @@ public class PatientDAO {
             stmt.setDate(2, java.sql.Date.valueOf(patient.getDob()));
             stmt.setString(3, patient.getGender());
             stmt.setString(4, patient.getContactInfo());
-            stmt.setInt(5, patient.getPatientID());
+            stmt.setString(5, patient.getPassword());
+            stmt.setInt(6, patient.getPatientID());
 
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {

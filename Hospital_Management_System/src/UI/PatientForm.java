@@ -1,96 +1,102 @@
 package UI;
 
-
 import DataAccessObjects.PatientDAO;
 import models.Patient;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.time.LocalDate;
-import java.util.List;
 
 public class PatientForm extends JFrame {
-    private JTable table;
-    private DefaultTableModel tableModel;
-    private JTextField nameField, dobField, genderField, contactField;
+    private JTextField usernameField, nameField, dobField, genderField, contactField;
+    private JPasswordField passwordField;
     private PatientDAO patientDAO = new PatientDAO();
+    private Patient currentPatient;
 
     public PatientForm() {
-        setTitle("Patient Management");
-        setSize(700, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Patient Portal");
+        setSize(400, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        // UI layout
         setLayout(new BorderLayout());
 
-        // Top input form
-        JPanel inputPanel = new JPanel(new GridLayout(2, 5, 10, 10));
+        JLabel title = new JLabel("Patient Information", JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 18));
+        add(title, BorderLayout.NORTH);
+
+        JPanel formPanel = new JPanel(new GridLayout(7, 2, 10, 10));
+
+        usernameField = new JTextField();
+        passwordField = new JPasswordField();
         nameField = new JTextField();
-        dobField = new JTextField("YYYY-MM-DD");
+        dobField = new JTextField();
         genderField = new JTextField();
         contactField = new JTextField();
 
-        inputPanel.add(new JLabel("Name:"));
-        inputPanel.add(nameField);
-        inputPanel.add(new JLabel("DOB:"));
-        inputPanel.add(dobField);
-        inputPanel.add(new JLabel("Gender:"));
-        inputPanel.add(genderField);
-        inputPanel.add(new JLabel("Contact:"));
-        inputPanel.add(contactField);
+        formPanel.add(new JLabel("Username:"));
+        formPanel.add(usernameField);
 
-        JButton addButton = new JButton("Add Patient");
-        addButton.addActionListener(e -> addPatient());
-        inputPanel.add(addButton);
+        formPanel.add(new JLabel("Password:"));
+        formPanel.add(passwordField);
 
-        add(inputPanel, BorderLayout.NORTH);
+        formPanel.add(new JLabel("Name:"));
+        formPanel.add(nameField);
+        nameField.setEditable(false);
 
-        // Table for patient data
-        tableModel = new DefaultTableModel(new String[]{"ID", "Name", "DOB", "Gender", "Contact"}, 0);
-        table = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
+        formPanel.add(new JLabel("DOB:"));
+        formPanel.add(dobField);
+        dobField.setEditable(false);
 
-        loadPatients();
+        formPanel.add(new JLabel("Gender:"));
+        formPanel.add(genderField);
+        genderField.setEditable(false);
+
+        formPanel.add(new JLabel("Contact Info:"));
+        formPanel.add(contactField);
+
+        JButton loadButton = new JButton("Login");
+        JButton saveButton = new JButton("Update Contact");
+
+        loadButton.addActionListener(e -> loginPatient());
+        saveButton.addActionListener(e -> updateContact());
+
+        formPanel.add(loadButton);
+        formPanel.add(saveButton);
+
+        add(formPanel, BorderLayout.CENTER);
     }
 
-    private void loadPatients() {
-        tableModel.setRowCount(0); // Clear existing rows
-        List<Patient> patients = patientDAO.getAllPatients();
-        for (Patient p : patients) {
-            tableModel.addRow(new Object[]{
-                    p.getPatientID(),
-                    p.getName(),
-                    p.getDob(),
-                    p.getGender(),
-                    p.getContactInfo()
-            });
-        }
-    }
-
-    private void addPatient() {
+    private void loginPatient() {
         try {
-            String name = nameField.getText();
-            LocalDate dob = LocalDate.parse(dobField.getText());
-            String gender = genderField.getText();
-            String contact = contactField.getText();
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
 
-            Patient patient = new Patient(name, dob, gender, contact);
-            patientDAO.addPatient(patient);
-            loadPatients();
-            clearFields();
-            JOptionPane.showMessageDialog(this, "Patient added successfully!");
+            currentPatient = patientDAO.loginPatient(username, password);
+
+            if (currentPatient != null) {
+                nameField.setText(currentPatient.getName());
+                dobField.setText(currentPatient.getDob().toString());
+                genderField.setText(currentPatient.getGender());
+                contactField.setText(currentPatient.getContactInfo());
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid Username or Password!");
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error during login!");
         }
     }
 
-    private void clearFields() {
-        nameField.setText("");
-        dobField.setText("YYYY-MM-DD");
-        genderField.setText("");
-        contactField.setText("");
+    private void updateContact() {
+        if (currentPatient == null) {
+            JOptionPane.showMessageDialog(this, "Please login first!");
+            return;
+        }
+
+        try {
+            currentPatient.setContactInfo(contactField.getText());
+            patientDAO.updatePatient(currentPatient);
+            JOptionPane.showMessageDialog(this, "Contact updated successfully!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to update contact.");
+        }
     }
 }
