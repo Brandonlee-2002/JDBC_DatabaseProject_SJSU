@@ -5,33 +5,27 @@ public class Doctor {
     private String name;
     private String specialty;
     private String contactInfo;
-    private String schedule;
+    private String username;
+    private String password;
 
-    public Doctor(int doctorID, String name, String specialty, String contactInfo, String schedule) {
+    public Doctor(int doctorID, String name, String specialty, String contactInfo, String username, String password) {
         this.doctorID = doctorID;
         this.name = name;
         this.specialty = specialty;
         this.contactInfo = contactInfo;
-        this.schedule = schedule;
+        this.username = username;
+        this.password = password;
     }
 
-    public Doctor(String name, String specialty, String contactInfo, String schedule) {
-        this.name = name;
-        this.specialty = specialty;
-        this.contactInfo = contactInfo;
-        this.schedule = schedule;
-    }
-
-    // Getters and setters
     public int getDoctorID() { return doctorID; }
     public String getName() { return name; }
     public String getSpecialty() { return specialty; }
     public String getContactInfo() { return contactInfo; }
-    public String getSchedule() { return schedule; }
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
 
-    public void setDoctorID(int doctorID) { this.doctorID = doctorID; }
-    public void setName(String name) { this.name = name; }
-    public void setSpecialty(String specialty) { this.specialty = specialty; }
-    public void setContactInfo(String contactInfo) { this.contactInfo = contactInfo; }
-    public void setSchedule(String schedule) { this.schedule = schedule; }
+    @Override
+    public String toString() {
+        return name + " (" + specialty + ")";
+    }
 }
