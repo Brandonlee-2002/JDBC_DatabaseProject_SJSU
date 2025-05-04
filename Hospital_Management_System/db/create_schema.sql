@@ -64,3 +64,19 @@ CREATE TABLE Pharmacy (
     Price DECIMAL(10,2),
     ExpiryDate DATE
 );
+
+-- Create Prescriptions table
+CREATE TABLE Prescriptions (
+    PrescriptionID INT AUTO_INCREMENT PRIMARY KEY,
+    PatientID INT,
+    DoctorID INT,
+    MedicineID INT,
+    Dosage VARCHAR(100),
+    Frequency VARCHAR(100),
+    Duration VARCHAR(100),
+    PrescriptionDate DATE,
+    Status VARCHAR(20),
+    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctors(DoctorID),
+    FOREIGN KEY (MedicineID) REFERENCES Pharmacy(MedicineID)
+);
