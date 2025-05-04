@@ -1,32 +1,44 @@
 package DataAccessObjects;
 
 import models.Doctor;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DoctorDAO {
 
-    // Add a new doctor
-    public void addDoctor(Doctor doctor) {
-        String sql = "INSERT INTO Doctors (Name, Specialty, ContactInfo, Schedule) VALUES (?, ?, ?, ?)";
+    // Login doctor using username and password
+    public Doctor loginDoctor(String username, String password) {
+        String sql = "SELECT * FROM Doctors WHERE Username = ? AND Password = ?";
+        Doctor doctor = null;
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, doctor.getName());
-            stmt.setString(2, doctor.getSpecialty());
-            stmt.setString(3, doctor.getContactInfo());
-            stmt.setString(4, doctor.getSchedule());
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
 
-            stmt.executeUpdate();
-            System.out.println("Doctor added successfully.");
+            if (rs.next()) {
+                doctor = new Doctor(
+                    rs.getInt("DoctorID"),
+                    rs.getString("Name"),
+                    rs.getString("Specialty"),
+                    rs.getString("ContactInfo"),
+                    rs.getString("Username"),
+                    rs.getString("Password")
+                );
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return doctor;
     }
 
-    // Get all doctors
+    // ✅ NEW: Get all doctors from the database
     public List<Doctor> getAllDoctors() {
         List<Doctor> doctors = new ArrayList<>();
         String sql = "SELECT * FROM Doctors";
@@ -36,87 +48,21 @@ public class DoctorDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Doctor d = new Doctor(
+                Doctor doctor = new Doctor(
                     rs.getInt("DoctorID"),
                     rs.getString("Name"),
                     rs.getString("Specialty"),
                     rs.getString("ContactInfo"),
-                    rs.getString("Schedule")
+                    rs.getString("Username"),
+                    rs.getString("Password")
                 );
-                doctors.add(d);
+                doctors.add(doctor);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return doctors;
-    }
-
-    // Get doctor by ID
-    public Doctor getDoctorById(int id) {
-        String sql = "SELECT * FROM Doctors WHERE DoctorID = ?";
-        Doctor doctor = null;
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                doctor = new Doctor(
-                    rs.getInt("DoctorID"),
-                    rs.getString("Name"),
-                    rs.getString("Specialty"),
-                    rs.getString("ContactInfo"),
-                    rs.getString("Schedule")
-                );
-            }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return doctor;
-    }
-
-    // Update doctor
-    public void updateDoctor(Doctor doctor) {
-        String sql = "UPDATE Doctors SET Name = ?, Specialty = ?, ContactInfo = ?, Schedule = ? WHERE DoctorID = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, doctor.getName());
-            stmt.setString(2, doctor.getSpecialty());
-            stmt.setString(3, doctor.getContactInfo());
-            stmt.setString(4, doctor.getSchedule());
-            stmt.setInt(5, doctor.getDoctorID());
-
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("Doctor updated successfully.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Delete doctor
-    public void deleteDoctor(int doctorID) {
-        String sql = "DELETE FROM Doctors WHERE DoctorID = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, doctorID);
-            int rowsDeleted = stmt.executeUpdate();
-
-            if (rowsDeleted > 0) {
-                System.out.println("Doctor deleted successfully.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }

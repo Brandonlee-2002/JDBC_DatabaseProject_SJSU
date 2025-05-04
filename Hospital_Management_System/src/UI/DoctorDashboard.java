@@ -1,49 +1,30 @@
 package UI;
 
-
-import DataAccessObjects.PatientDAO;
-import models.Patient;
+import models.Doctor;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.util.List;
 
 public class DoctorDashboard extends JFrame {
+    private Doctor doctor;
 
-    private JTable table;
-    private DefaultTableModel tableModel;
-    private PatientDAO patientDAO = new PatientDAO();
+    public DoctorDashboard(Doctor doctor) {
+        this.doctor = doctor;
 
-
-    public DoctorDashboard() {
-        setTitle("Doctor Dashboard - Patient List");
-        setSize(700, 400);
+        setTitle("Doctor Dashboard - " + doctor.getName());
+        setSize(500, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
 
-        JLabel title = new JLabel("Patient Overview", JLabel.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 18));
-        add(title, BorderLayout.NORTH);
+        JButton viewHistoryBtn = new JButton("View Patient History");
+        JButton updateRecordsBtn = new JButton("Update Medical Records");
+        JButton prescribeBtn = new JButton("Prescribe Medicine");
 
-        tableModel = new DefaultTableModel(new String[]{"ID", "Name", "DOB", "Gender", "Contact"}, 0);
-        table = new JTable(tableModel);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(viewHistoryBtn);
+        panel.add(updateRecordsBtn);
+        panel.add(prescribeBtn);
 
-        loadPatients();
-    }
-
-    private void loadPatients() {
-        List<Patient> patients = patientDAO.getAllPatients();
-        for (Patient p : patients) {
-            tableModel.addRow(new Object[]{
-                    p.getPatientID(),
-                    p.getName(),
-                    p.getDob(),
-                    p.getGender(),
-                    p.getContactInfo()
-            });
-        }
+        add(panel);
     }
 }
