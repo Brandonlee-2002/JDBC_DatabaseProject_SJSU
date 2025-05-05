@@ -34,18 +34,23 @@ public class MedicalRecordDAO {
         return records;
     }
 
-    public void addRecord(int patientId, String diagnosis, String treatment) {
-        String sql = "INSERT INTO MedicalRecords (PatientID, Diagnosis, Treatment, RecordDate) VALUES (?, ?, ?, CURDATE())";
+    public void addRecord(MedicalRecords record) {
+        String sql = "INSERT INTO MedicalRecords (PatientID, Diagnosis, Treatment, RecordDate) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, patientId);
-            stmt.setString(2, diagnosis);
-            stmt.setString(3, treatment);
+            stmt.setInt(1, record.getPatientID());
+            stmt.setString(2, record.getDiagnosis());
+            stmt.setString(3, record.getTreatment());
+            stmt.setDate(4, java.sql.Date.valueOf(record.getRecordDate()));
+
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
+	
 }

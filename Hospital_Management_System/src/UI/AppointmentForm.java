@@ -100,7 +100,7 @@ public class AppointmentForm extends JFrame {
             );
 
             appointmentDAO.addAppointment(appointment);
-            JOptionPane.showMessageDialog(this, "Appointment booked!");
+            JOptionPane.showMessageDialog(this, "Appointment booked!");           
             this.dispose();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error booking appointment. Please check your input.");
