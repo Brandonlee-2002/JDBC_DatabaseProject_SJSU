@@ -17,7 +17,6 @@ public class Appointment {
         this.reason = reason;
     }
 
-    // Getters
     public int getAppointmentID() { return appointmentID; }
     public int getPatientID() { return patientID; }
     public int getDoctorID() { return doctorID; }

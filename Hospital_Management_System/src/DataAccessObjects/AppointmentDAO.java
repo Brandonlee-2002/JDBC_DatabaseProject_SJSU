@@ -1,13 +1,11 @@
 package DataAccessObjects;
 
 import models.Appointment;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class AppointmentDAO {
-
     public void addAppointment(Appointment appointment) {
         String sql = "INSERT INTO Appointments (PatientID, DoctorID, AppointmentDate, Reason) VALUES (?, ?, ?, ?)";
 
@@ -20,7 +18,6 @@ public class AppointmentDAO {
             stmt.setString(4, appointment.getReason());
 
             stmt.executeUpdate();
-            System.out.println("Appointment added successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         }

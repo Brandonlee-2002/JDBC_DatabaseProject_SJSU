@@ -38,9 +38,8 @@ public class DoctorDAO {
         return doctor;
     }
 
-    // ✅ NEW: Get all doctors from the database
     public List<Doctor> getAllDoctors() {
-        List<Doctor> doctors = new ArrayList<>();
+        List<Doctor> list = new ArrayList<>();
         String sql = "SELECT * FROM Doctors";
 
         try (Connection conn = DBConnection.getConnection();
@@ -48,21 +47,19 @@ public class DoctorDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Doctor doctor = new Doctor(
-                    rs.getInt("DoctorID"),
-                    rs.getString("Name"),
-                    rs.getString("Specialty"),
-                    rs.getString("ContactInfo"),
-                    rs.getString("Username"),
-                    rs.getString("Password")
+                Doctor d = new Doctor(
+                        rs.getInt("DoctorID"),
+                        rs.getString("Name"),
+                        rs.getString("Specialty"),
+                        rs.getString("ContactInfo"),
+                        rs.getString("Username"),
+                        rs.getString("Password")
                 );
-                doctors.add(doctor);
+                list.add(d);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return doctors;
-    }
-}
+        return list;
+    }}

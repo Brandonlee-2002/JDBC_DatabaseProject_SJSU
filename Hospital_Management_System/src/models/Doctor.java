@@ -26,6 +26,6 @@ public class Doctor {
 
     @Override
     public String toString() {
-        return name + " (" + specialty + ")";
+        return name + " - " + specialty;
     }
 }
