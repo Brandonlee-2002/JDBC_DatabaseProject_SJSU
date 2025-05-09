@@ -2,6 +2,7 @@ package models;
 
 import java.time.LocalDate;
 
+//Creating Billing class with essential methods
 public class Billing {
     private int billID;
     private int patientID;

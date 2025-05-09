@@ -2,20 +2,20 @@ package UI;
 
 import DataAccessObjects.MedicalRecordDAO;
 import DataAccessObjects.PrescriptionDAO;
-import models.Doctor;
-import models.MedicalRecords;
-import models.Prescription;
-
-import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.List;
+import javax.swing.*;
+import models.Doctor;
+import models.MedicalRecords;
+import models.Prescription;
 
 public class DoctorDashboard extends JFrame {
     private Doctor doctor;
     private MedicalRecordDAO recordDAO = new MedicalRecordDAO();
     private PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
 
+    //UI code
     public DoctorDashboard(Doctor doctor) {
         this.doctor = doctor;
 
@@ -70,7 +70,7 @@ public class DoctorDashboard extends JFrame {
             JTextArea resultArea = new JTextArea();
             resultArea.setEditable(false);
 
-            loadBtn.addActionListener(e -> {
+            loadBtn.addActionListener(e -> { //Get patient records
                 try {
                     int patientId = Integer.parseInt(patientIdField.getText());
                     List<MedicalRecords> records = recordDAO.getRecordsByPatientId(patientId);
@@ -151,6 +151,7 @@ public class DoctorDashboard extends JFrame {
             JTextField durationField = new JTextField();
             JTextField statusField = new JTextField();
 
+            //Adding a new prescription
             JButton prescribeBtn = new JButton("Prescribe");
             prescribeBtn.addActionListener(e -> {
                 try {

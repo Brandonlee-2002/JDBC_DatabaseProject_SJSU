@@ -1,19 +1,20 @@
 package DataAccessObjects;
 
-import models.Prescription;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import models.Prescription;
 
 public class PrescriptionDAO {
     
+    //Adding a new prescription to Prescriptions table
     public void addPrescription(Prescription prescription) {
         String sql = "INSERT INTO Prescriptions (PatientID, DoctorID, MedicineID, Dosage, Frequency, Duration, PrescriptionDate, Status) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+            
             stmt.setInt(1, prescription.getPatientID());
             stmt.setInt(2, prescription.getDoctorID());
             stmt.setInt(3, prescription.getMedicineID());
@@ -29,7 +30,8 @@ public class PrescriptionDAO {
             e.printStackTrace();
         }
     }
-
+   
+    //Selecting all prescriptions by PatientID
     public List<Prescription> getPrescriptionsByPatientId(int patientId) {
         List<Prescription> prescriptions = new ArrayList<>();
         String sql = "SELECT * FROM Prescriptions WHERE PatientID = ?";
@@ -60,6 +62,7 @@ public class PrescriptionDAO {
         return prescriptions;
     }
 
+    //Selecting all prescriptions given by DoctorID
     public List<Prescription> getPrescriptionsByDoctorId(int doctorId) {
         List<Prescription> prescriptions = new ArrayList<>();
         String sql = "SELECT * FROM Prescriptions WHERE DoctorID = ?";
@@ -90,6 +93,7 @@ public class PrescriptionDAO {
         return prescriptions;
     }
 
+    //Updating status of prescription with sucess message
     public void updatePrescriptionStatus(int prescriptionId, String status) {
         String sql = "UPDATE Prescriptions SET Status = ? WHERE PrescriptionID = ?";
 

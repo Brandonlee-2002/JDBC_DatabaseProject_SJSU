@@ -2,6 +2,7 @@ package models;
 
 import java.time.LocalDate;
 
+//Creating MedicalRecords class with essential methods
 public class MedicalRecords {
     private int recordID;
     private int patientID;

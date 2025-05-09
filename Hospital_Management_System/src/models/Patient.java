@@ -2,6 +2,7 @@ package models;
 
 import java.time.LocalDate;
 
+//Creating Patient class with essential methods
 public class Patient {
     private int patientID;
     private String name;

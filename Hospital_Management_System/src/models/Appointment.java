@@ -2,6 +2,7 @@ package models;
 
 import java.time.LocalDateTime;
 
+//Creating Appointment class with essential methods
 public class Appointment {
     private int appointmentID;
     private int patientID;

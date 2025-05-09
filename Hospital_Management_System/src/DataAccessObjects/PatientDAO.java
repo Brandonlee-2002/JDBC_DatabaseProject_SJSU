@@ -1,10 +1,9 @@
 package DataAccessObjects;
 
-import models.Patient;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import models.Patient;
 
 public class PatientDAO {
 
@@ -71,7 +70,7 @@ public class PatientDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                patient = new Patient(
+                patient = new Patient( //Getting patient info
                     rs.getInt("PatientID"),
                     rs.getString("Name"),
                     rs.getDate("DOB").toLocalDate(),

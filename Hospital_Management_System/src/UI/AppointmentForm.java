@@ -27,6 +27,7 @@ public class AppointmentForm extends JFrame {
     public AppointmentForm(Patient patient) {
         this.patient = patient;
 
+        //UI Code
         setTitle("Make Appointment");
         setSize(450, 300);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -80,7 +81,8 @@ public class AppointmentForm extends JFrame {
                 JOptionPane.showMessageDialog(this, "Please select a valid date.");
                 return;
             }
-
+            
+            //Populating time variables with current time
             int hour = (int) hourSpinner.getValue();
             int minute = (int) minuteSpinner.getValue();
 

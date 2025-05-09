@@ -2,6 +2,8 @@ package models;
 
 import java.time.LocalDate;
 
+
+//Creating Prescription class with essential methods
 public class Prescription {
     private int prescriptionID;
     private int patientID;

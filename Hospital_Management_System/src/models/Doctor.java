@@ -1,5 +1,6 @@
 package models;
 
+//Creating Doctor class with essential methods
 public class Doctor {
     private int doctorID;
     private String name;
