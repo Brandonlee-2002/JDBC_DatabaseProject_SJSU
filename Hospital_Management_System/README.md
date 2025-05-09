@@ -22,4 +22,3 @@ Instructions to setup the project:
 
 3. Use initialize_data.sql to input all the data (all dummy data, no real person's info)
 
-4. 
